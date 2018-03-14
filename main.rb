@@ -1,5 +1,5 @@
-require_relative "clothing_item"
-require_relative "wardrobe"
+require_relative "lib/clothing_item"
+require_relative "lib/wardrobe"
 
 wardrobe = Wardrobe.load_from_data("#{__dir__}/data")
 
