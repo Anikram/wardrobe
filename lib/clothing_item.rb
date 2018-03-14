@@ -4,7 +4,7 @@ class ClothingItem
   def initialize(array)
     @title = array[0].chomp
     @category = array[1].chomp
-    @range = to_rage(array[2])
+    @range = to_range(array[2])
   end
 
   def present
@@ -12,10 +12,10 @@ class ClothingItem
   end
 
   def is_suit?(temperature)
-    true if range.include?(temperature)
+    range.include?(temperature) ? true : false
   end
 
-  def to_rage(string)
+  def to_range(string)
     array = string.gsub(/[()]+/, "").split
     Range.new(array[0].to_i,array[1].to_i)
   end
