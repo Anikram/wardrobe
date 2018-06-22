@@ -32,7 +32,7 @@ class Wardrobe
     set_parts = {}
 
     categories.each do |category|
-      set_parts["#{category}"] = sort_items_by_category(items, category)
+      set_parts[category] = sort_items_by_category(items, category)
     end
 
     items_set = combine_a_set(set_parts)

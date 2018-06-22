@@ -7,12 +7,12 @@ class ClothingItem
     @range = to_range(array[2])
   end
 
-  def present
+  def display_an_item
     "#{title} (#{category}) #{range}"
   end
 
-  def is_suit?(temperature)
-    range.include?(temperature) ? true : false
+  def suits?(temperature)
+    range.include?(temperature)
   end
 
   def to_range(string)
