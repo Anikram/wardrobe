@@ -1,6 +1,7 @@
 class Wardrobe
   attr_accessor :all_items
 
+  #загрузка гардероба из файла
   def self.load_from_data(path)
     wardrobe = []
     file_paths = Dir["#{path}/*"]
@@ -14,47 +15,77 @@ class Wardrobe
 
   def initialize(array)
     @all_items = array
-    @items_set = []
+    @items_set = nil
+    @user_temperature = nil
   end
 
-  def choose_suitable_items(user_input)
-    unless user_input.is_a?(Integer)
-      puts "Вы ввели не корректную температуру"
-      return
+  #приглашение на ввод температуры
+  def get_user_input
+    puts "Я помогу подобрать Вам одежду на сегодня."
+
+    unless @user_temperature.is_a?(Integer)
+      puts "Какая сейчас температура за окном?"
+      @user_temperature = STDIN.gets.to_i
     end
 
-    all_suitable_items = @all_items.select { |x| x.is_suit?(user_input) }
-    @items_set = make_a_set(all_suitable_items)
+    choose_suitable_items(@user_temperature)
   end
 
-  def make_a_set(items)
-    categories = read_all_categories(items)
+
+  #получить набор вещей, подходящих по температуре
+  def choose_suitable_items(user_input)
+    suitable_items = @all_items.select { |x| x.suits?(user_input) }
+    @items_set = get_items_set(suitable_items)
+  end
+
+  #получить набо вещей
+  def get_items_set(items)
+    categories = get_categories(items)
     set_parts = {}
 
     categories.each do |category|
       set_parts[category] = sort_items_by_category(items, category)
     end
 
-    items_set = combine_a_set(set_parts)
+    generate_set(set_parts)
   end
 
-  def read_all_categories(items)
+  #определяет все категории, представленных в наборе вещей
+  def get_categories(items)
     categories = []
 
     items.each do |item|
-      categories << item.category if !categories.include?(item.category)
+      categories << item.category unless categories.include?(item.category)
     end
 
     categories
   end
 
-  def combine_a_set(set_parts)
+  #подбирает по одной случайной вещи из каждой категории
+  def generate_set(set_parts)
     set = []
     set_parts.each_key { |key| set << set_parts[key].sample }
     set
   end
 
+  #получить все вещи из набора, определенной категории
   def sort_items_by_category(items, category)
-    good_items = items.select { |item| item.category == category}
+    items.select { |item| item.category == category}
+  end
+
+  #отобразить заранее собраный набор вещей
+  def list_item_set
+    return unless @items_set
+
+
+    if @items_set.empty?
+      puts 'В вашем гардеробе нет вещей для такой погоды.'
+    else
+      puts "\nЗа окном #{@user_temperature} градусов. Предлагаю Вам надеть:\n\r"
+
+      @items_set.each do |item|
+        puts item.to_s
+      end
+    end
   end
 end

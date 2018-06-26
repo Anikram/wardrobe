@@ -38,7 +38,7 @@ describe 'Wardrobe Class Object' do
         ClothingItem.new(["Кепка", "Торс", "(-50,+50)"]),
         ClothingItem.new(["Кепка", "Ступни", "(-50,+50)"]),
       ]
-      item_set = @wardrobe.make_a_set(items)
+      item_set = @wardrobe.get_items(items)
 
       item_set.each do |item|
         expect(item).to be_a(ClothingItem)

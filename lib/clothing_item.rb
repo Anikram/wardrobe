@@ -7,7 +7,7 @@ class ClothingItem
     @range = to_range(array[2])
   end
 
-  def display_an_item
+  def to_s
     "#{title} (#{category}) #{range}"
   end
 
