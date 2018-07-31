@@ -2,7 +2,7 @@
 require_relative "lib/clothing_item"
 require_relative "lib/wardrobe"
 
-puts "Вас приветсвует Ваш гардероб! (версия 2)
+puts "Вас приветсвует Ваш гардероб! (версия 2)"
 
 wardrobe = Wardrobe.load_from_data("#{__dir__}/data")
 

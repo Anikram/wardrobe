@@ -1,5 +1,5 @@
 class Wardrobe
-  attr_accessor :all_items
+  attr_accessor :all_items, :errors, :items_set, :user_temperature
 
   #загрузка гардероба из файла
   def self.load_from_data(path)
@@ -17,6 +17,8 @@ class Wardrobe
     @all_items = array
     @items_set = nil
     @user_temperature = nil
+    @errors = nil
+    @responce = nil
   end
 
   #приглашение на ввод температуры
@@ -34,8 +36,13 @@ class Wardrobe
 
   #получить набор вещей, подходящих по температуре
   def choose_suitable_items(user_input)
-    suitable_items = @all_items.select { |x| x.suits?(user_input) }
-    @items_set = get_items_set(suitable_items)
+    if user_input.is_a?(Integer)
+      suitable_items = @all_items.select { |x| x.suits?(user_input) }
+      @items_set = get_items_set(suitable_items)
+    else
+      @errors = "Введена не корректная температура! "
+      nil
+    end
   end
 
   #получить набо вещей
@@ -79,13 +86,15 @@ class Wardrobe
 
 
     if @items_set.empty?
-      puts 'В вашем гардеробе нет вещей для такой погоды.'
+      @responce = 'В вашем гардеробе нет вещей для такой погоды.'
     else
-      puts "\nЗа окном #{@user_temperature} градусов. Предлагаю Вам надеть:\n\r"
+      @responce = "\nЗа окном #{@user_temperature} градусов. Предлагаю Вам надеть:\n\r"
 
       @items_set.each do |item|
-        puts item.to_s
+        @responce << item.to_s
       end
     end
+    puts @responce
+    @responce
   end
 end
