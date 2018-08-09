@@ -1,3 +1,4 @@
+# Clothing item class
 class ClothingItem
   attr_reader :title, :category, :range
 
@@ -16,7 +17,7 @@ class ClothingItem
   end
 
   def to_range(string)
-    array = string.gsub(/[()]+/, "").split
-    Range.new(array[0].to_i,array[1].to_i)
+    array = string.gsub(/[()]+/, '').split
+    Range.new(array[0].to_i, array[1].to_i)
   end
 end
