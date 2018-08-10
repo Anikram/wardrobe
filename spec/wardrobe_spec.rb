@@ -44,4 +44,58 @@ describe 'Wardrobe Class Object' do
       expect(@wardrobe.list_item_set).to eq 'В вашем гардеробе нет вещей для такой погоды.'
     end
   end
+
+  describe '.load_from_data' do
+    context 'reads files from a folder' do
+      it 'create an array of ClothingItem instances' do
+        wardrobe = Wardrobe.load_from_data(path)
+
+        expect(wardrobe.all_items.class).to be(Array)
+        wardrobe.all_items.each do |item|
+          expect(item.class).to be(ClothingItem)
+        end
+      end
+    end
+  end
+
+  describe '#categories' do
+    it 'retuns the array of strings (category names)' do
+      @wardrobe.choose_suitable_items(10)
+      expect(@wardrobe.categories).to eq(['Ступни', 'Голова', 'Торс'])
+    end
+
+    it 'returns an empty array, when no suitable items categories exists' do
+      @wardrobe.choose_suitable_items(100)
+      expect(@wardrobe.categories).to eq([])
+    end
+  end
+
+  describe '#items_by_categories' do
+    it 'retuns the hash of items(category1: [item1, item2], cate... )' do
+      @wardrobe.choose_suitable_items(10)
+      hash = @wardrobe.items_by_categories
+      expect(hash.keys).to eq(["Ступни", "Голова", "Торс"])
+      expect(hash.values.sample.first.title).to eq('Кепка')
+    end
+  end
+
+  describe '#items_by_temperature' do
+    context 'when there are some items for the temperature' do
+      it 'returns items which are good for temperature' do
+        items = @wardrobe.items_by_temperature(10)
+
+        items.each do |item|
+          range = item.range
+          expect(range).to cover(10)
+        end
+      end
+    end
+
+    context 'when no items for the temperature' do
+      it 'returns an empty array' do
+        items = @wardrobe.items_by_temperature(100)
+        expect(items).to eq([])
+      end
+    end
+  end
 end

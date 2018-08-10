@@ -20,7 +20,6 @@ class Wardrobe
     @items_set = []
     @user_temperature = nil
     @error = nil
-    @responce = nil
   end
 
   # generate items_set according to temperature input
@@ -70,15 +69,15 @@ class Wardrobe
   # show item list
   def list_item_set
     if @items_set.empty?
-      @responce = 'В вашем гардеробе нет '\
+      responce = 'В вашем гардеробе нет '\
                   'вещей для такой погоды.'
     else
-      @responce = "\nЗа окном #{@user_temperature} градусов."\
+      responce = "\nЗа окном #{@user_temperature} градусов."\
                   " Предлагаю Вам надеть:\n\r"
       @items_set.each do |item|
-        @responce << item.to_s + "\n"
+        responce << item.to_s + "\n"
       end
     end
-    @responce
+    responce
   end
 end
