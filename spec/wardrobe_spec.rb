@@ -30,7 +30,7 @@ describe 'Wardrobe Class Object' do
       end
 
       it 'first ClothingItem of an array is legal' do
-        item = @wardrobe.all_items.sort{ |x,y| x.id <=> y.id }.first
+        item = @wardrobe.all_items.sort_by(&:id).min
         expect(item.id).to eq 1
         expect(item).to be_a ClothingItem
         expect(item.title).to eq 'Кепка'
@@ -51,7 +51,8 @@ describe 'Wardrobe Class Object' do
     end
 
     it 'returns error message if temperature is not correct' do
-      expect(@wardrobe.choose_suitable_items('a')).to eq('Введена не корректная температура!')
+      responce = @wardrobe.choose_suitable_items('a')
+      expect(responce).to eq('Введена не корректная температура!')
     end
 
     it 'returns three ClothingItem instances' do
@@ -66,23 +67,24 @@ describe 'Wardrobe Class Object' do
       expect(@wardrobe.items_set).to be_a(Array)
 
       expect(@wardrobe.list_item_set).to eq "\nЗа окном отличная погода."\
-                                            " Предлагаю Вам надеть:\n\rКепка (Голова) "\
-                                            "-50..50\nКепка (Ступни) -50..50\nКепка "\
-                                            "(Торс) -50..50\n"
+                                   " Предлагаю Вам надеть:\n\rКепка (Голова) "\
+                                   "-50..50\nКепка (Ступни) -50..50\nКепка "\
+                                   "(Торс) -50..50\n"
     end
 
     it 'returns message when no items suits' do
       @wardrobe.choose_suitable_items(90)
       expect(@wardrobe.items_set).to be_a(Array)
 
-      expect(@wardrobe.list_item_set).to eq 'В вашем гардеробе нет вещей для такой погоды.'
+      expect(@wardrobe.list_item_set).to eq 'В вашем гардеробе '/
+                                        'нет вещей для такой погоды.'
     end
   end
 
   describe '#categories' do
     it 'returns the array of strings (category names)' do
       @wardrobe.choose_suitable_items(10)
-      expect(@wardrobe.categories).to eq(['Голова', 'Ступни', 'Торс'])
+      expect(@wardrobe.categories).to eq %w[Голова Ступни Торс]
     end
 
     it 'returns an empty array, when no suitable items categories exists' do
@@ -91,7 +93,7 @@ describe 'Wardrobe Class Object' do
     end
 
     it 'returns all available categories when called just after IDLE state' do
-      expect(@wardrobe.categories).to eq(['Голова', 'Ступни', 'Торс'])
+      expect(@wardrobe.categories).to eq %w[Голова Ступни Торс]
     end
   end
 
@@ -99,7 +101,7 @@ describe 'Wardrobe Class Object' do
     it 'returns the hash of items(category1: [item1, item2], cate... )' do
       @wardrobe.choose_suitable_items(10)
       hash = @wardrobe.items_by_categories
-      expect(hash.keys).to eq([ "Голова", "Ступни","Торс"])
+      expect(hash.keys).to eq %w[Голова Ступни Торс]
       expect(hash.values.sample.first.title).to eq('Кепка')
     end
   end

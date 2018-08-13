@@ -1,6 +1,6 @@
 # Wardrobe class, which stores Clothing items instances
 class Wardrobe
-  attr_accessor :all_items, :error, :items_set, :user_temperature, :suitable_items
+  attr_accessor :all_items, :items_set, :suitable_items
 
   # load items from file
   def self.load_from_data(address)
@@ -9,7 +9,8 @@ class Wardrobe
     file_paths = Dir["#{address}/*"]
 
     file_paths.each do |path|
-      wardrobe << ClothingItem.new(File.readlines(path) + item_number.to_s.split)
+      params = File.readlines(path) + item_number.to_s.split
+      wardrobe << ClothingItem.new(params)
       item_number += 1
     end
 
@@ -26,12 +27,8 @@ class Wardrobe
   def choose_suitable_items(user_input)
     if user_input.is_a?(Integer)
       @suitable_items = items_by_temperature(user_input)
-
       set_parts = items_by_categories
-
       set_parts.each_key { |key| @items_set << set_parts[key].sample }
-
-
     else
       'Введена не корректная температура!'
     end
@@ -41,7 +38,7 @@ class Wardrobe
   def categories
     categories = []
 
-    items = @suitable_items || @all_items
+    items = suitable_items || @all_items
 
     items.each do |item|
       categories << item.category unless categories.include?(item.category)
@@ -55,7 +52,7 @@ class Wardrobe
     set_parts = {}
 
     categories.each do |category|
-      set_parts[category] = @suitable_items.select do |item|
+      set_parts[category] = suitable_items.select do |item|
         item.category == category
       end
     end
@@ -65,20 +62,18 @@ class Wardrobe
 
   # return items, which suits for temperature
   def items_by_temperature(temperature)
-    @all_items.select { |x| x.suits?(temperature) }
+    all_items.select { |x| x.suits?(temperature) }
   end
 
   # show item list
   def list_item_set
-    if !@items_set.flatten.any?
+    if items_set.flatten.none?
       responce = 'В вашем гардеробе нет '\
                   'вещей для такой погоды.'
     else
       responce = "\nЗа окном отличная погода."\
                   " Предлагаю Вам надеть:\n\r"
-      @items_set.each do |item|
-        responce << item.to_s + "\n"
-      end
+      items_set.each { |item| responce << item.to_s + "\n" }
     end
     responce
   end
