@@ -1,11 +1,12 @@
 # Clothing item class
 class ClothingItem
-  attr_reader :title, :category, :range
+  attr_reader :title, :category, :range, :id
 
   def initialize(array)
     @title = array[0].chomp
     @category = array[1].chomp
     @range = to_range(array[2])
+    @id = array[3].to_i
   end
 
   def to_s
